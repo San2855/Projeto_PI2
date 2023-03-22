@@ -29,15 +29,18 @@ def agendar():
     hora = request.form['hora']
     nome = request.form['nome']
     email = request.form['email']
+    conn = sqlite3.connect('agendar.db')
+    c = conn.cursor
 
   #tópico 5
-    cursor.execute("""
+    c.execute("""
     INSERT INTO agendamentos (data, hora, nome, email)
     VALUES (?, ?, ?, ?)
     """, (data, hora, nome, email))
     conn.commit()
+    conn.close()
 
-    return redirect(url_for('formulario'))
+    return redirect('/cadastrosucesso.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
