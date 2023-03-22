@@ -3,11 +3,8 @@ import sqlite3
 
 app = Flask(__name__)
 
-#tópico 1
-conn = sqlite3.connect('agenda.db')
+conn = sqlite3.connect('agendar.db')
 cursor = conn.cursor()
-
-#tópico 2
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS agendamentos (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -18,11 +15,11 @@ CREATE TABLE IF NOT EXISTS agendamentos (
 );
 """)
 conn.commit()
-#tópico 3
+
 @app.route('/')
 def index():
     return render_template('formulario.html')
-#tópico 4
+
 @app.route('/agendar', methods=['POST'])
 def agendar():
     data = request.form['data']
@@ -30,9 +27,7 @@ def agendar():
     nome = request.form['nome']
     email = request.form['email']
     conn = sqlite3.connect('agendar.db')
-    c = conn.cursor
-
-  #tópico 5
+    c = conn.cursor()
     c.execute("""
     INSERT INTO agendamentos (data, hora, nome, email)
     VALUES (?, ?, ?, ?)
@@ -40,7 +35,12 @@ def agendar():
     conn.commit()
     conn.close()
 
-    return redirect('/cadastrosucesso.html')
+    return redirect('/sucesso.html')
+
+@app.route ('/sucesso.html')
+def cadastradosucesso():
+    return render_template('sucesso.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
