@@ -30,7 +30,7 @@ label {
 }
 
 /* Estilo para os campos de entrada */
-input {
+input, select {
   display: block;
   width: 100%;
   padding: 10px;

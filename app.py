@@ -28,14 +28,25 @@ def agendar():
     email = request.form['email']
     conn = sqlite3.connect('agendar.db')
     c = conn.cursor()
-    c.execute("""
-    INSERT INTO agendamentos (data, hora, nome, email)
-    VALUES (?, ?, ?, ?)
-    """, (data, hora, nome, email))
-    conn.commit()
-    conn.close()
 
-    return redirect('/sucesso.html')
+    # Verifica se já existe um agendamento para a data e hora selecionadas
+    c.execute("""
+    SELECT COUNT(*) FROM agendamentos
+    WHERE data = ? AND hora = ?
+    """, (data, hora))
+    count = c.fetchone()[0]
+    if count > 0:
+        # Caso já exista um agendamento, exibe uma mensagem de erro personalizada
+        return render_template('erro.html', mensagem='Já existe um agendamento para a data e hora selecionadas.')
+    else:
+        # Caso não exista, insere o novo agendamento no banco de dados
+        c.execute("""
+        INSERT INTO agendamentos (data, hora, nome, email)
+        VALUES (?, ?, ?, ?)
+        """, (data, hora, nome, email))
+        conn.commit()
+        conn.close()
+        return redirect('/sucesso.html')
 
 @app.route ('/sucesso.html')
 def cadastradosucesso():
